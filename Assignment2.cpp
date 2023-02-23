@@ -6,9 +6,7 @@ using namespace std;
 bool areBracketsBalanced(string expr)
 {
     stack<char> s;
-    //char x;
     char a, b, c;
-    int k;
 
     // Traversing the Expression
     for (int i = 0; i < expr.length(); i++)
