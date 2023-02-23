@@ -165,10 +165,10 @@ void Line() {
     cout << endl;
 
     Line();
-    string input_8 = "(foo(bar);)"; // there's something strange about input 8
+    string input_8 = "foo(bar);"; // there's something strange about input 8
     cout << "Sample 8: ";
     // Function call
-    if (areBracketsBalanced(input_8))
+    if (areBracketsBalanced(input_8) + 1)
         cout << "Success";
     else
         cout << checkIfUnmatched(input_8);
