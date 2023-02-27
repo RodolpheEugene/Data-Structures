@@ -7,61 +7,91 @@ bool areBracketsBalanced(string expr)
 {
     stack<char> s;
     char a, b, c;
+    int singleBracketCount = 0;
+    bool singleBracketFound = false;
+    bool matchedBrackets = true;
 
     // Traversing the Expression
     for (int i = 0; i < expr.length(); i++)
     {
-        if (expr[i] == '(' || expr[i] == '['
-            || expr[i] == '{')
+        if (expr[i] == '(' || expr[i] == '[' || expr[i] == '{')
         {
             // Push the element in the stack
             s.push(expr[i]);
             continue;
         }
-
-        // IF current current character is not opening
-        // bracket, then it must be closing. So stack
-        // cannot be empty at this point.
-        if (s.empty())
-            return false;
-
-        switch (expr[i]) {
-        case ')':
-
-            // Store the top element in a
-            a = s.top();
-            s.pop();
-            if (a == '{' || a == '[')
-                return false;
-            break;
-
-        case '}':
-
-            // Store the top element in b
-            b = s.top();
-            s.pop();
-            if (b == '(' || b == '[')
-                return false;
-            break;
-
-        case ']':
-
-            // Store the top element in c
-            c = s.top();
-            s.pop();
-            if (c == '(' || c == '{')
-                return false;
-            break;
+        else if (expr[i] == ')' || expr[i] == ']' || expr[i] == '}')
+        {
+            // If current character is closing bracket, then it must match with
+            // the top element of the stack
+            if (s.empty()) {
+                matchedBrackets = false;
+                break;
+            }
+            else {
+                if (expr[i] == ')') {
+                    // Store the top element in a
+                    a = s.top();
+                    s.pop();
+                    if (a == '{' || a == '[') {
+                        matchedBrackets = false;
+                        break;
+                    }
+                }
+                else if (expr[i] == '}') {
+                    // Store the top element in b
+                    b = s.top();
+                    s.pop();
+                    if (b == '(' || b == '[') {
+                        matchedBrackets = false;
+                        break;
+                    }
+                }
+                else if (expr[i] == ']') {
+                    // Store the top element in c
+                    c = s.top();
+                    s.pop();
+                    if (c == '(' || c == '{') {
+                        matchedBrackets = false;
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            // Increment the single bracket counter
+            singleBracketCount++;
         }
     }
-    // Check Empty Stack
-    return (s.empty());
+    // Check if there are any single brackets left in the stack
+    while (!s.empty()) {
+        if (s.top() == '(' || s.top() == '{' || s.top() == '[') {
+            singleBracketFound = true;
+        }
+        s.pop();
+    }
 
+    // Check if the number of single brackets is even
+    if (singleBracketCount % 2 != 0) {
+        return false;
+    }
+
+    // Check if there are any single unmatched brackets
+    if (singleBracketFound) {
+        return false;
+    }
+
+    // Check if all the brackets are matched
+    if (!matchedBrackets) {
+        return false;
+    }
+
+    return true;
 }
 
 // function to check if it is unmatched
 int checkIfUnmatched(string expr) {
-   
+
     stack<char> s;
 
 
@@ -85,7 +115,7 @@ void Line() {
 }
 
 // Driver code
-    int main(){
+int main() {
 
     Line();
     string input_1 = "[]";
@@ -95,10 +125,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_1);
-    
-    cout << endl;
-
     Line();
+
     string input_2 = "{}[]";
     cout << "Sample 2: ";
     // Function call
@@ -106,10 +134,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_2);
-
-    cout << endl;
-
     Line();
+
     string input_3 = "[()]";
     cout << "Sample 3: ";
     // Function call
@@ -117,10 +143,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_3);
-
-    cout << endl;
-
     Line();
+
     string input_4 = "(())";
     cout << "Sample 4: ";
     // Function call
@@ -128,10 +152,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_4);
-
-    cout << endl;
-
     Line();
+
     string input_5 = "{[]}()";
     cout << "Sample 5: ";
     // Function call
@@ -139,10 +161,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_5);
-
-    cout << endl;
-
     Line();
+
     string input_6 = "{";
     cout << "Sample 6: ";
     // Function call
@@ -150,10 +170,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_6);
-
-    cout << endl;
-
     Line();
+
     string input_7 = "{[}";
     cout << "Sample 7: ";
     // Function call
@@ -161,10 +179,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_7);
-
-    cout << endl;
-
     Line();
+
     string input_8 = "foo(bar);"; // there's something strange about input 8
     cout << "Sample 8: ";
     // Function call
@@ -172,10 +188,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_8);
-
-    cout << endl;
-
     Line();
+
     string input_9 = "foo(bar[i);";
     cout << "Sample 9: ";
     // Function call
@@ -183,10 +197,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_9);
-
-    cout << endl;
-
     Line();
+
     string input_41 = "ablabla)ihihi(ohoho";
     cout << "Sample 41: ";
     // Function call
@@ -194,10 +206,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_41);
-    
-    cout << endl;
-
     Line();
+
     string input_28 = "({})}";
     cout << "Sample 28: ";
     // Function call
@@ -205,10 +215,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_28) + 1;
-    
-    cout << endl;
-
     Line();
+
     string input_39 = "({(}";
     cout << "Sample 39: ";
     // Function call
@@ -216,10 +224,8 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_39);
-
-    cout << endl;
-
     Line();
+
     string input_45 = "(([({{((({([[({{((((({(({{[[({([{[({[{({{[[[[({{(([([({({({([([[[[{{{[{({[{({([{{{[([{{{{({[(([{{({[(({(([(({[[([{[[(([({[{([(([[{([[{{([[{[({[([{[[({[[((([({[[[([({[{({([{{{(({[({{((({[{[[{[{{[{([{{[([{(({(({{{({{[([{{{{({{({[({[{({{{{({{[{[{(({[({[{({([([{[{({{[([{[(({{[{({((({([({{[[[({{[[[[[([[[([[[{[[{{[([[{[([{{{({{[{[{({[({[([{[{[{{[({({{([{([([[[[[{({{[({(([[[({[{[{[{({[{((([(({{[{([[({{({([(({{[{{(([{[{((((((((([{{([({[([{({([{{({{[{{[{(([[{(({{([([{[[{([{[({[{({[({[[[(({([[(({{[[{[[(({(({{{[{[[[[[[{[{{{{[(([([{[[{{[[([[(([[[{{([(([{(({{{{[[(([[[{{[([[{(({(([({{[[[([({[{{[[[(([{([(({[((([[([(({{{[{(([[{{{[([(([[({[[[({[((([[({{({{{[(({(([[([([([[([([{[[[[[(([[(({{(((([[({{{({{({([([{{[[[({([{[[([{([({{[[[{{([{[{({({[{((([{{(([[[{[({{({([{[{({(({(((((([({{{{[{({[{[{[{{({{{[[(([[([{([[((({{({(((([{[{{[{{({[[({[[[[[{{{((({{([{([{(([{(({[[({[[[({{[([{{([([{({{[({{[[[{([([[({({[[[[[{{({{[{{[{[[[[{([(([({(({{[({[[({([{([{(((({[(((([{([{{({{[({{[(({[(({[((([[[(([{{((([{([({{{((([({(())})])))}}})])}])))}}]))]]])))]}))]}))]}})]}})}}])}]))))]}))))}])}])})]]})]}}))})]))])}]]]]}]}}]}})}}]]]]]})})]])])}]]]}})]}})}])])}}])]}})]]]})]]}))}]))}])}])}})))}}}]]]]]})]]})}}]}}]}]))))})}})))]])}])]]))]]}}})}}]}]}]})}]}}}})]))))))}))})}]}])})}})]}]]]))}}])))}]})})}]}])}}]]]}})])}])]]}])})]]]}}])])})}})}}})]]))))}}))]]))]]]]]}])])]])])])]]))}))]}}})}})]])))]})]]]})]]))])]}}}]]))}]}}}))])]])))]}))])}]))]]]}}]})])]]]}})]))}))}]])]}}]]]))]]}}}}))}]))])}}]]]))]])]]}}]]}])]))]}}}}]}]]]]]]}]}}}))}))]]}]]}}))]])}))]]]})]})}]})]}])}]]}])])}}))}]]))}]}}]}})}}])})}])]})])}}])))))))))}]}]))}}]}}))])})}})]])}]}}))])))}]})}]}]}]})]]]))})]}})}]]]]])])}])}})})]}}]}]}])]})]})}]}]}})}}}])]}]])]}}]]}]]])]]])]]]]]}})]]]}})])})))})}]}}))]}])]}})}]}])])})}]})]}))}]}]}})}}}})}]})]})}})}}}}])]}})}}}))}))}])]}}])}]}}]}]]}]})))}})]}))}}}])})}]})])]]]})])))]]})]]}])]})]}]])}}]])}]]))])}]})]))]]}])]]}))]))}))]})}}]))]})}}}}])]}}}])})}]})}]}}}]]]])])})})})])]))}})]]]]}})}]})]}])})]]}}))})))))}})]])})))}})]))";
     cout << "Sample 45: ";
     // Function call
@@ -227,9 +233,7 @@ void Line() {
         cout << "Success";
     else
         cout << checkIfUnmatched(input_45);
-
-    cout << endl;
     Line();
-         
+
     return EXIT_SUCCESS;
 }
