@@ -6,11 +6,12 @@ public:
     int data;
     Node* left;
     Node* right;
+    Node* root;
     Node() {
         data = 0;
         left = NULL;
         right = NULL;
-
+        root = NULL;
     }
     Node(int val) {
         data = val;
@@ -311,6 +312,123 @@ Node* deleteNode(Node* root, int value) {
     return root;
 }
 
+// I declare root variable in the BST class and set it equal to NULL
+//// AVL tree class
+//class AVLTree {
+//public:
+//    Node* root;
+//    int key;
+//    
+//    AVLTree() {
+//        root = NULL;
+//    }
+
+    // AVLInsert function
+    // use Rebalance and Find functions inside of AVLInsert
+    Node* AVLInsert(Node* node, Node* tempNode) {
+        if (node == NULL) {
+            node = tempNode;
+            cout << "Value is inserted" << endl;
+            return node;
+        }
+
+        if (tempNode->data < node->data) {
+            node->left = AVLInsert(node->left, tempNode);
+        }
+        else if (tempNode->data > node->data) {
+            node->right = AVLInsert(node->right, tempNode);
+        }
+        else {
+            cout << "Cannot enter duplicate values!" << endl;
+            return node;
+        }
+
+        int bf = balanceFactor(node);
+        
+        // Left Left Case
+        if (bf > 1 && tempNode->data < node->left->data)
+            return rotateRight(node);
+        // Right Right Case
+        if (bf < -1 && tempNode->data < node->right->data)
+            return rotateLeft(node);
+        // Left Right Case
+        if (bf > 1 && tempNode->data < node->left->data) {
+            node->left = rotateLeft(node->left);
+            return rotateRight(node);
+        }
+        // Right left Case
+        if (bf < -1 && tempNode->data < node->right->data) {
+            node->right = rotateRight(node->right);
+            return rotateLeft(node);
+        }
+
+        // when the node pointer does not change
+        return node;
+    }
+
+    // Rebalance function
+
+
+    // max Function
+    int max(int a, int b) {
+        return (a > b) ? a : b;
+    }
+
+    // Rebalance Function (needed for insertion and deletion)
+    
+    // Compute Height Function
+    int height(Node* node) {
+        if (node == NULL)
+            return 0;
+        else {
+            int leftHeight = height(node->left);
+            int rightHeight = height(node->right);
+
+            // check for max value and adds 1 to it
+            return max(leftHeight, rightHeight) + 1;
+        }
+        
+    }
+    // Compute BF Function using recursive method
+    int balanceFactor(Node* node) {
+        if (node == NULL)
+            return 0;
+        return height(node->left) - height(node->right);
+    }
+    // Rotate Left Function suing recursive method
+    Node* rotateLeft(Node* node) {
+
+        Node *temp1 = node->right;
+        Node *temp2 = temp1->left;
+
+        // rotation
+        temp1->left = node;
+        node->right = temp2;
+
+        // update height of AVL
+        // try declaring "int height" and initialize it to 1 in constructor
+
+
+        // return the new root
+        return temp1;
+    }
+
+    // Rotation Right Function
+    Node* rotateRight(Node* node) {
+        Node* temp1 = node->left;
+        Node* temp2 = temp1->right;
+
+        // rotation
+        temp1->right = node;
+        node->left = temp2;
+
+        // update height of AVL
+
+        // return the new root
+        return temp1;
+    }
+
+//};
 
 
 
@@ -345,7 +463,7 @@ int main() {
             tempNode = new Node(val); // Create the node.
 
             // Insert the value.
-            myRoot = insert(myRoot, tempNode);
+            myRoot = AVLInsert(myRoot, tempNode);
         }
 
         if (ans == 2) {
