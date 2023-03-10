@@ -3,14 +3,13 @@ using namespace std;
 
 class Node {
 public:
-    int data;
-    int height;
+    int data, val, height;
     Node* left;
     Node* right;
     Node* root;
     Node() {
+        
         data = 0;
-        height = 1;
         left = NULL;
         right = NULL;
         root = NULL;
@@ -19,7 +18,7 @@ public:
         data = val;
         left = NULL;
         right = NULL;
-
+        height = 1;
     }
 };
 
@@ -314,45 +313,37 @@ Node* deleteNode(Node* root, int value) {
     return root;
 }
 
-// I declare root variable in the BST class and set it equal to NULL
-//// AVL tree class
-//class AVLTree {
-//public:
-//    Node* root;
-//    int key;
-//    
-//    AVLTree() {
-//        root = NULL;
-//    }
-
     // AVLInsert function
     // use Rebalance and Find functions inside of AVLInsert
-    Node* AVLInsert(Node* node, Node* tempNode) {
+    Node* AVLInsert(Node* node,  int val) {
         if (node == NULL) {
-            node = tempNode;
             cout << "Value is inserted" << endl;
-            return node;
+            return new Node(val);
         }
 
-        if (tempNode->data < node->data) {
-            node->left = AVLInsert(node->left, tempNode);
+        if (val < node->val) {
+            node->left = AVLInsert(node->left, val);
         }
-        else if (tempNode->data > node->data) {
-            node->right = AVLInsert(node->right, tempNode);
+        else if(val > node->val) {
+            node->right = AVLInsert(node->right, val);
         }
         else {
-            cout << "Cannot enter duplicate values!" << endl;
             return node;
         }
+        adjustHeight(node);
+        findNode(node, val);
+        node = rebalanceRight(node);
+        node = rebalanceLeft(node);
 
-        rebalance(node,tempNode);
-    
+        return node;
    }
 
 
     // Rebalance function
     Node* rebalance(Node* node, Node* tempNode) {
         int bf = balanceFactor(node);
+
+        
 
         // Left Left Case
         if (bf > 1 && tempNode->data < node->left->data)
@@ -371,6 +362,8 @@ Node* deleteNode(Node* root, int value) {
             return rotateLeft(node);
         }
 
+        // updates the height of the tree
+        adjustHeight(node);
         // when the node pointer does not change
         return node;
     }
@@ -387,7 +380,7 @@ Node* deleteNode(Node* root, int value) {
         if (node == NULL)
             return 0;
         else {
-            int leftHeight = height(node->left);
+            int leftHeight =height(node->left);
             int rightHeight = height(node->right);
 
             // check for max value and adds 1 to it
@@ -401,6 +394,13 @@ Node* deleteNode(Node* root, int value) {
             return 0;
         return height(node->left) - height(node->right);
     }
+
+    // function to update the tree
+    void adjustHeight(Node* n) {
+        n->height = 1 + max(height(n->left), height(n->right));
+    }
+
+
     // Rotate Left Function suing recursive method
     Node* rotateLeft(Node* node) {
 
@@ -412,8 +412,8 @@ Node* deleteNode(Node* root, int value) {
         node->right = temp2;
 
         // update height of AVL
-        // try declaring "int height" and initialize it to 1 in constructor
-
+        adjustHeight(node);
+        adjustHeight(temp1);
 
         // return the new root
         return temp1;
@@ -429,10 +429,37 @@ Node* deleteNode(Node* root, int value) {
         node->left = temp2;
 
         // update height of AVL
+        adjustHeight(node);
+        adjustHeight(temp1);
 
         // return the new root
         return temp1;
     }
+
+    // Function to rebalanceRight
+
+    Node* rebalanceRight(Node* node) {
+        if (balanceFactor(node) < -1) {
+            if (balanceFactor(node->left) > 0) {
+                node->left - rotateLeft(node->left);
+            }
+            return rotateRight(node);
+        }
+        return node;
+    }
+
+    // Function to rebalanceLeft
+    Node* rebalanceLeft(Node* node) {
+        if (balanceFactor(node) > 1) {
+            if (balanceFactor(node->right) < 0) {
+                node->right = rotateRight(node->right);
+            }
+            return rotateLeft(node);
+        }
+        return node;
+    }
+
+   
 
 //};
 
@@ -469,7 +496,7 @@ int main() {
             tempNode = new Node(val); // Create the node.
 
             // Insert the value.
-            myRoot = AVLInsert(myRoot, tempNode);
+            myRoot = AVLInsert(myRoot,val);
         }
 
         if (ans == 2) {
