@@ -12,25 +12,23 @@ public:
     int data;
     int bf;
     int height;
-    int val;
-    Node* root;
+    Node* parent;
     Node* left;
     Node* right;
 
     Node() {
         data = 0;
         bf = 0;
-        height = 1;
-        root = NULL;
+        height = 0;
+        parent = NULL;
         left = NULL;
         right = NULL;
-
     }
     Node(int val) {
         data = val;
         bf = 0;
-        height = 1;
-        root = NULL;
+        height = 0;
+        parent = NULL;
         left = NULL;
         right = NULL;
     }
@@ -40,9 +38,19 @@ vector<int> result;
 Node* next(Node* n, Node* root);
 Node* leftDescendent(Node* n);
 Node* rightAncestor(Node* n, Node* root);
+Node* rotateLeft(Node* node);
 Node* avlDelete(int data, Node* root);
+int balanceFactor(Node* root);
 int getHeight(Node* n);
+//Node* rebalance(Node* root);
+Node* rebalance(Node* node, Node* tempNode);
+Node* rebalanceLeft(Node* node);
+Node* rebalanceRight(Node* node);
+Node* rotateRight(Node* node);
+void adjustHeight(Node* n);
+Node* AVLInsert(Node* node, int val);
 vector<int> rangeSearch(int valx, int valy, Node* root);
+int height(Node* node);
 void inorder(Node* currentPtr);
 Node* insert(Node* root,
     Node* element);
@@ -56,17 +64,6 @@ int hasOnlyLeftChild(Node* node);
 int hasOnlyRightChild(Node* node);
 Node* findNode(Node* currentPtr, int value);
 Node* deleteNode(Node* root, int value);
-Node* AVLInsert(Node* node, int val);
-int balanceFactor(Node* root);
-Node* rebalance(Node* node, Node* tempNode);
-int max(int a, int b);
-int balanceFactor(Node* node);
-void adjustHeight(Node* n);
-Node* rotateLeft(Node* node);
-Node* rotateRight(Node* node);
-Node* rebalanceRight(Node* node);
-Node* rebalanceLeft(Node* node);
-
 int menu();
 
 void inorder(Node* currentPtr) {
@@ -341,51 +338,6 @@ Node* avlDelete(int data, Node* root) {
 
     return root;
 }
-bool isUnbalanced(Node* root) {
-
-    if (root == NULL) {
-        return false;
-    }
-    int leftHeight = getHeight(root->left);
-    int rightHeight = getHeight(root->right);
-
-    if (abs(leftHeight - rightHeight) > 1) {
-        return true;
-    }
-    return isUnbalanced(root->left) || isUnbalanced(root->right);
-}
-int getHeight(Node* n) {
-    if (n == NULL) {
-        return 0;
-    }
-    return 1 + max(getHeight(n->left), getHeight(n->right));
-}
-
-// AVLInsert function
-// use Rebalance and Find functions inside of AVLInsert
-Node* AVLInsert(Node* node, int val) {
-    if (node == NULL) {
-        cout << "Value is inserted" << endl;
-        return new Node(val);
-    }
-
-    if (val < node->val) {
-        node->left = AVLInsert(node->left, val);
-    }
-    else if (val > node->val) {
-        node->right = AVLInsert(node->right, val);
-    }
-    else {
-        return node;
-    }
-    adjustHeight(node);
-    findNode(node, val);
-    node = rebalanceRight(node);
-    node = rebalanceLeft(node);
-
-    return node;
-}
-
 // Rebalance function
 Node* rebalance(Node* node, Node* tempNode) {
     int bf = balanceFactor(node);
@@ -419,7 +371,31 @@ Node* rebalance(Node* node, Node* tempNode) {
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
+/*bool isUnbalanced(Node* root) {
 
+    if (root == NULL) {
+        return false;
+    }
+    int leftHeight = getHeight(root->left);
+    int rightHeight = getHeight(root->right);
+
+    if (abs(leftHeight - rightHeight) > 1) {
+        return true;
+    }
+    return isUnbalanced(root->left) || isUnbalanced(root->right);
+}*/
+/*int getHeight(Node* n) {
+    if (n == NULL) {
+        return 0;
+    }
+    return 1 + max(getHeight(n->left), getHeight(n->right));
+}*/
+// Compute BF Function using recursive method
+int balanceFactor(Node* node) {
+    if (node == NULL)
+        return 0;
+    return height(node->left) - height(node->right);
+}
 // Compute Height Function
 int height(Node* node) {
     if (node == NULL)
@@ -433,17 +409,11 @@ int height(Node* node) {
     }
 
 }
-// Compute BF Function using recursive method
-int balanceFactor(Node* node) {
-    if (node == NULL)
-        return 0;
-    return height(node->left) - height(node->right);
-}
-
 // function to update the tree
 void adjustHeight(Node* n) {
     n->height = 1 + max(height(n->left), height(n->right));
 }
+
 
 // Rotate Left Function suing recursive method
 Node* rotateLeft(Node* node) {
@@ -481,6 +451,7 @@ Node* rotateRight(Node* node) {
 }
 
 // Function to rebalanceRight
+
 Node* rebalanceRight(Node* node) {
     if (balanceFactor(node) < -1) {
         if (balanceFactor(node->left) > 0) {
@@ -501,7 +472,30 @@ Node* rebalanceLeft(Node* node) {
     }
     return node;
 }
+// AVLInsert function
+  // use Rebalance and Find functions inside of AVLInsert
+Node* AVLInsert(Node* node, int val) {
+    if (node == NULL) {
+        cout << "Value is inserted" << endl;
+        return new Node(val);
+    }
 
+    if (val < node->data) {
+        node->left = AVLInsert(node->left, val);
+    }
+    else if (val > node->data) {
+        node->right = AVLInsert(node->right, val);
+    }
+    else {
+        return node;
+    }
+    adjustHeight(node);
+    findNode(node, val);
+    node = rebalanceRight(node);
+    node = rebalanceLeft(node);
+
+    return node;
+}
 
 
 void print(std::vector<int> const& result) {
@@ -517,8 +511,8 @@ int menu() {
     cout << "3. Search for an item in your tree.\n";
     cout << "4. Print the sum of the nodes. \n";
     cout << "5. Print out an inorder traversal.\n";
-    cout << "7. Find elements between x and y:  \n";
-    cout << "6. Exit.\n";
+    cout << "6. Find elements between x and y:  \n";
+    cout << "7. Exit.\n";
     cin >> ans;
     return ans;
 }
@@ -535,7 +529,7 @@ int main() {
             cin >> val;
             tempNode = new Node(val); // Create the node.
             // Insert the value.
-            myRoot = insert(myRoot, tempNode);
+            myRoot = AVLInsert(myRoot, val);
         }
         if (ans == 2) {
             cout << "What value would you like to delete?\n";
@@ -562,7 +556,7 @@ int main() {
             inorder(myRoot);
             cout << "\n";
         }
-        if (ans == 7) {
+        if (ans == 6) {
             cout << "Please enter x value: ";
             cin >> valx;
             cout << "Please enter y value: ";
