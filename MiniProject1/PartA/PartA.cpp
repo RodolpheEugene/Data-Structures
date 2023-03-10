@@ -4,11 +4,13 @@ using namespace std;
 class Node {
 public:
     int data;
+    int height;
     Node* left;
     Node* right;
     Node* root;
     Node() {
         data = 0;
+        height = 1;
         left = NULL;
         right = NULL;
         root = NULL;
@@ -343,8 +345,15 @@ Node* deleteNode(Node* root, int value) {
             return node;
         }
 
+        rebalance(node,tempNode);
+    
+   }
+
+
+    // Rebalance function
+    Node* rebalance(Node* node, Node* tempNode) {
         int bf = balanceFactor(node);
-        
+
         // Left Left Case
         if (bf > 1 && tempNode->data < node->left->data)
             return rotateRight(node);
@@ -365,9 +374,6 @@ Node* deleteNode(Node* root, int value) {
         // when the node pointer does not change
         return node;
     }
-
-    // Rebalance function
-
 
     // max Function
     int max(int a, int b) {
