@@ -40,20 +40,25 @@ private:
     }
 
     void SiftDown(int i) {
-        int minIndex = i;
-        int leftChild = 2 * i + 1;
-        int rightChild = 2 * i + 2;
+        int minIndex = i; // initialize with value of i and keep track of minimum elements 
+        int leftChild = 2 * i + 1; // calculate the lefft index of current node 
+        int rightChild = 2 * i + 2; // calculate the right index of current node
 
+        // checks whether the left child of current node exist and if index is within bound
         if (leftChild < data_.size() && data_[leftChild] < data_[minIndex]) {
-            minIndex = leftChild;
+            minIndex = leftChild; // updates the index of the left child
         }
+
+        // checks whether the right child of current node exists and if index is within bound
         if (rightChild < data_.size() && data_[rightChild] < data_[minIndex]) {
-            minIndex = rightChild;
+            minIndex = rightChild; // updates the index of the right child
         }
+
+        // checks if current node is already the minimum element
         if (i != minIndex) {
-            swap(data_[i], data_[minIndex]);
-            swaps_.push_back(make_pair(i, minIndex));
-            SiftDown(minIndex);
+            swap(data_[i], data_[minIndex]); // values in current node and minimum are swapped
+            swaps_.push_back(make_pair(i, minIndex));  // add pair of indexes to  swap_ vector
+            SiftDown(minIndex); // call recursively on minimum node until heap properties are satisfied
         }
     }
 
