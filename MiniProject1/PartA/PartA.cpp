@@ -1,3 +1,7 @@
+
+
+
+
 #include <iostream>
 #include<vector>
 #include <algorithm>
@@ -62,10 +66,7 @@ int hasOnlyLeftChild(Node* node);
 int hasOnlyRightChild(Node* node);
 Node* findNode(Node* currentPtr, int value);
 Node* deleteNode(Node* root, int value);
-<<<<<<< main
 Node* avlInsertA(Node* root, Node* tempNode);
-=======
->>>>>>> main
 int menu();
 
 void inorder(Node* currentPtr) {
@@ -287,7 +288,6 @@ vector<int> rangeSearch(int x, int y, Node* root) {
 }
 int addRange(int x, int y, Node* root) {
 
-<<<<<<< main
     vector<int> result;
     int sum = 0;
 
@@ -316,12 +316,6 @@ Node* avlDelete(int data, Node* root) {
     deleteNode(n, data);
     Node* M = parent(n, root);
     rebalance(M, temp);
-=======
-    Node* n = findNode(root, data);
-    deleteNode(n, data);
-    Node* M = parent(n, root);
-    //rebalance(M);
->>>>>>> main
 
     return root;
 }
@@ -356,7 +350,6 @@ Node* rebalance(Node* node, Node* tempNode) {
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
-<<<<<<< main
 bool isUnbalanced(Node* root) {
 
     if (root == NULL) {
@@ -365,25 +358,11 @@ bool isUnbalanced(Node* root) {
     int leftHeight = height(root->left);
     int rightHeight = height(root->right);
 
-=======
-/*bool isUnbalanced(Node* root) {
-
-    if (root == NULL) {
-        return false;
-    }
-    int leftHeight = getHeight(root->left);
-    int rightHeight = getHeight(root->right);
-
->>>>>>> main
     if (abs(leftHeight - rightHeight) > 1) {
         return true;
     }
     return isUnbalanced(root->left) || isUnbalanced(root->right);
-<<<<<<< main
 }
-=======
-}*/
->>>>>>> main
 /*int getHeight(Node* n) {
     if (n == NULL) {
         return 0;
@@ -496,7 +475,6 @@ Node* AVLInsert(Node* node, int val) {
 
     return node;
 }
-<<<<<<< main
 Node* avlInsertA(Node* root, Node* tempNode) {
 
     insert(root, tempNode);
@@ -550,8 +528,6 @@ Node* findNode(Node* currentPtr, int value) {
     else
         return NULL; // No node found.
 }
-=======
->>>>>>> main
 
 
 void print(std::vector<int> const& result) {
@@ -566,18 +542,12 @@ int menu() {
     cout << "2. Delete an item from your tree.\n";
     cout << "3. Search for an item in your tree.\n";
     cout << "4. Print the sum of the nodes. \n";
-<<<<<<< main
     cout << "5. Print the next element of the node with key x.\n";
     cout << "6. Find elements between x and y:  \n";
     cout << "7. Find the height of the tree: \n";
     cout << "8. Print the sum of the list of elements between x and y: \n";
     cout << "9 Print out an inorder traversal: \n";
     cout << "10. Exit.\n";
-=======
-    cout << "5. Print out an inorder traversal.\n";
-    cout << "6. Find elements between x and y:  \n";
-    cout << "7. Exit.\n";
->>>>>>> main
     cin >> ans;
     return ans;
 }
@@ -594,13 +564,9 @@ int main() {
             cin >> val;
             tempNode = new Node(val); // Create the node.
             // Insert the value.
-<<<<<<< main
             //myRoot = AVLInsert(myRoot, val);
             myRoot = avlInsertA(myRoot, tempNode);
 
-=======
-            myRoot = AVLInsert(myRoot, val);
->>>>>>> main
         }
         if (ans == 2) {
             cout << "What value would you like to delete?\n";
