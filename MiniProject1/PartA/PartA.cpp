@@ -1,7 +1,5 @@
 
 
-
-
 #include <iostream>
 #include<vector>
 #include <algorithm>
@@ -67,6 +65,7 @@ int hasOnlyRightChild(Node* node);
 Node* findNode(Node* currentPtr, int value);
 Node* deleteNode(Node* root, int value);
 Node* avlInsertA(Node* root, Node* tempNode);
+Node* rebalanceA(Node* root, Node* node);
 int menu();
 
 void inorder(Node* currentPtr) {
@@ -477,10 +476,39 @@ Node* AVLInsert(Node* node, int val) {
 }
 Node* avlInsertA(Node* root, Node* tempNode) {
 
-    insert(root, tempNode);
-    Node* newTemp = findNode(root, tempNode->data);
-    rebalance(root, newTemp);
-    return root;
+    Node* root1 = root;
+    if (root == NULL) {
+        root1 = insert(root, tempNode);
+        return root1;
+
+    }
+    else {
+        int k = tempNode->data;
+        cout << "int value is: " << k << endl;
+        root1 = insert(root, tempNode);
+        tempNode = findNode(root1, k);
+        cout << " find node I just added: " << tempNode->data << endl;
+        root1 = rebalanceA(root1, tempNode);
+        cout << "root after rebalancing is: " << root1->data << endl;
+        return root1;
+    }
+}
+Node* rebalanceA(Node* root, Node* node) {
+    Node* par = parent(node, root);
+    if (par->left == node || par->right == node) {
+        return par;
+    }
+    else {
+        cout << "parent key is: " << par->data << endl;
+        if (node->left->height > node->right->height + 1)
+            rebalanceRight(node);
+        if (node->right->height > node->left->height)
+            rebalanceLeft(node);
+        adjustHeight(node);
+        if (par != NULL)
+            rebalanceA(root, par);
+        return root;
+    }
 }
 Node* insert(Node* root, Node* element) {
 
@@ -605,8 +633,7 @@ int main() {
             cout << "Which element do wish to find the next node in the tree? \n";
             cin >> val;
             Node* m = next(findNode(myRoot, val));
-            cout << "The next node is: " << m->data  << "\n";
-
+            cout << "The next node is: " << m->data << "\n";
         }
         if (ans == 7) {
             cout << "The height of the tree is: " << height(myRoot) << "\n";
