@@ -2,19 +2,18 @@
 #include<vector>
 #include <algorithm>
 #include <iterator>
-
 using namespace std;
-class Node {
+class Node
+{
 public:
-
     int data;
     int bf;
     int height;
     Node* parent;
     Node* left;
     Node* right;
-
-    Node() {
+    Node()
+    {
         data = 0;
         bf = 0;
         height = 0;
@@ -22,7 +21,8 @@ public:
         left = NULL;
         right = NULL;
     }
-    Node(int val) {
+    Node(int val)
+    {
         data = val;
         bf = 0;
         height = 0;
@@ -62,9 +62,10 @@ int hasOnlyLeftChild(Node* node);
 int hasOnlyRightChild(Node* node);
 Node* findNode(Node* currentPtr, int value);
 Node* deleteNode(Node* root, int value);
+Node* avlInsertA(Node* root, Node* tempNode);
 int menu();
-
-void inorder(Node* currentPtr) {
+void inorder(Node* currentPtr)
+{
     // Only traverse the node if it's not null.
     if (currentPtr != NULL) {
         inorder(currentPtr->left); // Go Left.
@@ -72,36 +73,8 @@ void inorder(Node* currentPtr) {
         inorder(currentPtr->right); // Go Right.
     }
 }
-Node* insert(Node* root, Node* element) {
-
-    // Inserting into an empty tree.
-    if (root == NULL) {
-        return element;
-    }
-    else {
-        // element should be inserted to the right.
-        if (element->data > root->data) {
-            // There is a right subtree to insert the node.
-            if (root->right != NULL)
-                root->right = insert(root->right, element);
-            // Place the node directly to the right of root.
-            else
-                root->right = element;
-        }
-        // element should be inserted to the left.
-        else {
-            // There is a left subtree to insert the node.
-            if (root->left != NULL)
-                root->left = insert(root->left, element);
-            // Place the node directly to the left of root.
-            else
-                root->left = element;
-        }
-        // Return the root pointer of the updated tree.
-        return root;
-    }
-}
-int add(Node* currentPtr) {
+int add(Node* currentPtr)
+{
     if (currentPtr != NULL)
         return currentPtr->data + add(currentPtr->left) +
         add(currentPtr->right);
@@ -109,7 +82,8 @@ int add(Node* currentPtr) {
         return 0;
 }
 // Returns a pointer to the node storing the minimum value in the tree
-Node* minVal(Node* root) {
+Node* minVal(Node* root)
+{
     // Root stores the minimal value.
     if (root->left == NULL)
         return root;
@@ -118,7 +92,8 @@ Node* minVal(Node* root) {
         return minVal(root->left);
 }
 // Returns a pointer to the node storing the maximum value in the tree
-Node* maxVal(Node* root) {
+Node* maxVal(Node* root)
+{
     // Root stores the maximal value.
     if (root->right == NULL)
         return root;
@@ -127,22 +102,25 @@ Node* maxVal(Node* root) {
         return maxVal(root->right);
 }
 // Returns 1 if node is a leaf node, 0 otherwise.
-int isLeaf(Node* node) {
+int isLeaf(Node* node)
+{
     return (node->left == NULL && node->right == NULL);
 }
 // Returns 1 iff node has a left child and no right child.
-int hasOnlyLeftChild(Node* node) {
+int hasOnlyLeftChild(Node* node)
+{
     return (node->left != NULL && node->right == NULL);
 }
 // Returns 1 iff node has a right child and no left child.
-int hasOnlyRightChild(Node* node) {
+int hasOnlyRightChild(Node* node)
+{
     return (node->left == NULL && node->right != NULL);
 }
-
 // Will delete the node storing value in the tree rooted at root. The
 // value must be present in the tree in order for this function to work.
 // The function returns a pointer to the root of the resulting tree.
-Node* deleteNode(Node* root, int value) {
+Node* deleteNode(Node* root, int value)
+{
     Node* delnode, * newDelNode, * saveNode;
     Node* par;
     int saveVal;
@@ -212,15 +190,16 @@ Node* deleteNode(Node* root, int value) {
         return root;
     }
     //when delnode has two children
-      // Find the new physical node to delete.
+    // Find the new physical node to delete.
     newDelNode = minVal(delnode->right);
     saveVal = newDelNode->data;
-    deleteNode(root, saveVal);  // Now, delete the proper value.
+    deleteNode(root, saveVal); // Now, delete the proper value.
     // Restore the data to the original node to be deleted.
     delnode->data = saveVal;
     return root;
 }
-int find(Node* currentPtr, int val) {
+int find(Node* currentPtr, int val)
+{
     // Check if there are nodes in the tree.
     if (currentPtr != NULL) {
         // Found the value at the root.
@@ -236,27 +215,11 @@ int find(Node* currentPtr, int val) {
     else
         return 0;
 }
-// Returns a pointer to a node that stores value in it in the subtree
-Node* findNode(Node* currentPtr, int value) {
-    // Check if there are nodes in the tree.
-    if (currentPtr != NULL) {
-        // Found the value at the root.
-        if (currentPtr->data == value)
-            return currentPtr;
-        // Search to the left.
-        if (value < currentPtr->data)
-            return findNode(currentPtr->left, value);
-        // Or search to the right.
-        else
-            return findNode(currentPtr->right, value);
-    }
-    else
-        return NULL; // No node found.
-}
 // Returns the parent of the node pointed to by node in the tree rooted at
 // root. If the node is the root of the tree, or the node doesn't exist in
 // the tree, null will be returned.
-Node* parent(Node* node, Node* root) {
+Node* parent(Node* node, Node* root)
+{
     // Take care of NULL cases.
     if (root == NULL || root == node)
         return NULL;
@@ -271,17 +234,17 @@ Node* parent(Node* node, Node* root) {
         return parent(root->right, node);
     return NULL; // For any other cases.
 }
-Node* next(Node* n, Node* root) {
-
+Node* next(Node* n, Node* root)
+{
     if (n->right != NULL) {
         return leftDescendent(n->right);
     }
     else {
         return rightAncestor(n, root);
     }
-    //else {return par}
 }
-Node* leftDescendent(Node* n) {
+Node* leftDescendent(Node* n)
+{
     cout << "leftdesc: " << n->data << endl;
     if (n->left == NULL) {
         return n;
@@ -290,9 +253,9 @@ Node* leftDescendent(Node* n) {
         return leftDescendent(n->left);
     }
 }
-Node* rightAncestor(Node* n, Node* root) {
+Node* rightAncestor(Node* n, Node* root)
+{
     cout << "right anc.: " << n->data << endl;
-
     Node* par = parent(n, root);
     if (par == NULL) {
         return NULL;
@@ -305,13 +268,11 @@ Node* rightAncestor(Node* n, Node* root) {
     }
     //return par;
 }
-vector<int> rangeSearch(int x, int y, Node* root) {
-
+vector<int> rangeSearch(int x, int y, Node* root)
+{
     vector<int> result;
-
     Node* temp = findNode(root, x);
     cout << "findnode: " << temp->data << endl;
-
     while (temp != NULL && temp->data <= y) {
         if (temp->data >= x) {
             result.push_back(temp->data);
@@ -327,21 +288,40 @@ vector<int> rangeSearch(int x, int y, Node* root) {
     cout << "result size: " << result.size() << endl;
     return result;
 }
-Node* avlDelete(int data, Node* root) {
-
+int addRange(int x, int y, Node* root)
+{
+    vector<int> result;
+    int sum = 0;
+    Node* temp = findNode(root, x);
+    cout << "findnode: " << temp->data << endl;
+    while (temp != NULL && temp->data <= y) {
+        if (temp->data >= x) {
+            sum = sum + temp->data;
+        }
+        temp = next(temp, root);
+        if (temp != NULL) {
+            cout << "next: " << temp->data << endl;
+        }
+        else {
+            cout << "no next" << endl;
+        }
+    }
+    cout << "result size: " << result.size() << endl;
+    return sum;
+}
+Node* avlDelete(int data, Node* root)
+{
+    Node* temp = new Node();
     Node* n = findNode(root, data);
     deleteNode(n, data);
     Node* M = parent(n, root);
-    //rebalance(M);
-
+    rebalance(M, temp);
     return root;
 }
 // Rebalance function
-Node* rebalance(Node* node, Node* tempNode) {
+Node* rebalance(Node* node, Node* tempNode)
+{
     int bf = balanceFactor(node);
-
-
-
     // Left Left Case
     if (bf > 1 && tempNode->data < node->left->data)
         return rotateRight(node);
@@ -358,99 +338,89 @@ Node* rebalance(Node* node, Node* tempNode) {
         node->right = rotateRight(node->right);
         return rotateLeft(node);
     }
-
     // updates the height of the tree
     adjustHeight(node);
     // when the node pointer does not change
     return node;
 }
-
 // max Function
-int max(int a, int b) {
+int max(int a, int b)
+{
     return (a > b) ? a : b;
 }
-/*bool isUnbalanced(Node* root) {
-
+bool isUnbalanced(Node* root)
+{
     if (root == NULL) {
         return false;
     }
-    int leftHeight = getHeight(root->left);
-    int rightHeight = getHeight(root->right);
-
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
     if (abs(leftHeight - rightHeight) > 1) {
         return true;
     }
     return isUnbalanced(root->left) || isUnbalanced(root->right);
-}*/
+}
 /*int getHeight(Node* n) {
-    if (n == NULL) {
-        return 0;
-    }
-    return 1 + max(getHeight(n->left), getHeight(n->right));
+ if (n == NULL) {
+ return 0;
+ }
+ return 1 + max(getHeight(n->left), getHeight(n->right));
 }*/
 // Compute BF Function using recursive method
-int balanceFactor(Node* node) {
+int balanceFactor(Node* node)
+{
     if (node == NULL)
         return 0;
     return height(node->left) - height(node->right);
 }
 // Compute Height Function
-int height(Node* node) {
+int height(Node* node)
+{
     if (node == NULL)
         return 0;
     else {
         int leftHeight = height(node->left);
         int rightHeight = height(node->right);
-
         // check for max value and adds 1 to it
         return max(leftHeight, rightHeight) + 1;
     }
-
 }
 // function to update the tree
-void adjustHeight(Node* n) {
+void adjustHeight(Node* n)
+{
     n->height = 1 + max(height(n->left), height(n->right));
 }
-
-
 // Rotate Left Function suing recursive method
-Node* rotateLeft(Node* node) {
-
+Node* rotateLeft(Node* node)
+{
     Node* temp1 = node->right;
     Node* temp2 = temp1->left;
-
     // rotation
     temp1->left = node;
     node->right = temp2;
-
     // update height of AVL
     adjustHeight(node);
     adjustHeight(temp1);
-
     // return the new root
     return temp1;
 }
-
 // Rotation Right Function
-Node* rotateRight(Node* node) {
+Node* rotateRight(Node* node)
+{
     Node* temp1 = node->left;
     Node* temp2 = temp1->right;
-
     // rotation
     temp1->right = node;
     node->left = temp2;
-
     // update height of AVL
     adjustHeight(node);
     adjustHeight(temp1);
-
     // return the new root
     return temp1;
 }
-
 // Function to rebalanceRight
-
-Node* rebalanceRight(Node* node) {
+Node* rebalanceRight(Node* node)
+{
     if (balanceFactor(node) < -1) {
         if (balanceFactor(node->left) > 0) {
             node->left - rotateLeft(node->left);
@@ -459,9 +429,9 @@ Node* rebalanceRight(Node* node) {
     }
     return node;
 }
-
 // Function to rebalanceLeft
-Node* rebalanceLeft(Node* node) {
+Node* rebalanceLeft(Node* node)
+{
     if (balanceFactor(node) > 1) {
         if (balanceFactor(node->right) < 0) {
             node->right = rotateRight(node->right);
@@ -471,13 +441,13 @@ Node* rebalanceLeft(Node* node) {
     return node;
 }
 // AVLInsert function
-  // use Rebalance and Find functions inside of AVLInsert
-Node* AVLInsert(Node* node, int val) {
+// use Rebalance and Find functions inside of AVLInsert
+Node* AVLInsert(Node* node, int val)
+{
     if (node == NULL) {
         cout << "Value is inserted" << endl;
         return new Node(val);
     }
-
     if (val < node->data) {
         node->left = AVLInsert(node->left, val);
     }
@@ -491,30 +461,86 @@ Node* AVLInsert(Node* node, int val) {
     findNode(node, val);
     node = rebalanceRight(node);
     node = rebalanceLeft(node);
-
     return node;
 }
-
-
-void print(std::vector<int> const& result) {
+Node* avlInsertA(Node* root, Node* tempNode)
+{
+    insert(root, tempNode);
+    Node* newTemp = findNode(root, tempNode->data);
+    rebalance(root, newTemp);
+    return root;
+}
+Node* insert(Node* root, Node* element)
+{
+    // Inserting into an empty tree.
+    if (root == NULL) {
+        return element;
+    }
+    else {
+        // element should be inserted to the right.
+        if (element->data > root->data) {
+            // There is a right subtree to insert the node.
+            if (root->right != NULL)
+                root->right = insert(root->right, element);
+            // Place the node directly to the right of root.
+            else
+                root->right = element;
+        }
+        // element should be inserted to the left.
+        else {
+            // There is a left subtree to insert the node.
+            if (root->left != NULL)
+                root->left = insert(root->left, element);
+            // Place the node directly to the left of root.
+            else
+                root->left = element;
+        }
+        // Return the root pointer of the updated tree.
+        return root;
+    }
+}
+// Returns a pointer to a node that stores value in it in the subtree
+Node* findNode(Node* currentPtr, int value)
+{
+    // Check if there are nodes in the tree.
+    if (currentPtr != NULL) {
+        // Found the value at the root.
+        if (currentPtr->data == value)
+            return currentPtr;
+        // Search to the left.
+        if (value < currentPtr->data)
+            return findNode(currentPtr->left, value);
+        // Or search to the right.
+        else
+            return findNode(currentPtr->right, value);
+    }
+    else
+        return NULL; // No node found.
+}
+void print(std::vector<int> const& result)
+{
     std::copy(result.begin(), result.end(), std::ostream_iterator<int>(std::cout, " "));
 }
-
 // Prints out the menu of choices for the user and returns their choice.
-int menu() {
+int menu()
+{
     int ans;
     cout << "Here are your choices.\n";
     cout << "1. Insert an item into your tree.\n";
     cout << "2. Delete an item from your tree.\n";
     cout << "3. Search for an item in your tree.\n";
     cout << "4. Print the sum of the nodes. \n";
-    cout << "5. Print out an inorder traversal.\n";
-    cout << "6. Find elements between x and y:  \n";
-    cout << "7. Exit.\n";
+    cout << "5. Print the next element of the node with key x.\n";
+    cout << "6. Find elements between x and y: \n";
+    cout << "7. Find the height of the tree: \n";
+    cout << "8. Print the sum of the list of elements between x and y: \n";
+    cout << "9 Print out an inorder traversal: \n";
+    cout << "10. Exit.\n";
     cin >> ans;
     return ans;
 }
-int main() {
+int main()
+{
     Node* myRoot = NULL, * tempNode;
     int done = 0, ans = 1, val, q6data, valx, valy;
     vector<int> result = {};
@@ -525,9 +551,11 @@ int main() {
             // Get value to insert.
             cout << "What value would you like to insert?";
             cin >> val;
-            tempNode = new Node(val); // Create the node.
+            cout << endl;
+            //tempNode = new Node(val); // Create the node.
             // Insert the value.
             myRoot = AVLInsert(myRoot, val);
+            //myRoot = avlInsertA(myRoot, tempNode);
         }
         if (ans == 2) {
             cout << "What value would you like to delete?\n";
@@ -548,7 +576,7 @@ int main() {
         }
         if (ans == 4)
             cout << "The sum of the nodes in your tree is" << add(myRoot) << "\n";
-        if (ans == 5) {
+        if (ans == 9) {
             // Print the resulting tree.
             cout << "Here is an inorder traversal of your tree: ";
             inorder(myRoot);
@@ -561,9 +589,25 @@ int main() {
             cin >> valy;
             print(rangeSearch(valx, valy, myRoot));
             print(result);
-
         }
-
+        if (ans == 5) {
+            cout << "Which element do wish to find the next node in the tree? \n";
+            cin >> val;
+            Node* m = next(findNode(myRoot, val));
+            cout << "The next node is: " << m->data << "\n";
+        }
+        if (ans == 7) {
+            cout << "The height of the tree is: " << height(myRoot) << "\n";
+        }
+        if (ans == 8) {
+            cout << "Please enter x value: ";
+            cin >> valx;
+            cout << "Please enter y value: ";
+            cin >> valy;
+            cout << "the sum of the nodes between x and y is: " << addRange(valx, valy, myRoot) << "\n";
+        }
+        if (ans == 10)
+            exit(0);
         // See if they want to insert more nodes.
         ans = menu();
     }
