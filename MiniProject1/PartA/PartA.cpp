@@ -272,7 +272,7 @@ void searchRange(Node *root, int valx, int valy, bool printorsum) {
     } else {
       for (int i = 0; i < count; i++) {
         if (i + 1 < count) {
-          cout << arr[i] << " ,";
+          cout << arr[i] << ", ";
         } else {
           cout << arr[i] << endl;
         }
