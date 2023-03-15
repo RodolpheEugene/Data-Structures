@@ -257,7 +257,7 @@ void searchRange(Node *root, int valx, int valy, bool printorsum) {
     temp = next(root, valx);
   }
   int range = valy - valx, arr[range], count = 0;
-  while (temp != NULL && temp->data < valy) { // Filling the array.
+  while (temp != NULL && temp->data <= valy) { // Filling the array.
     arr[count] = temp->data;
     count++;
     temp = next(root, temp->data);
