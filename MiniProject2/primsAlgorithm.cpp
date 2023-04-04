@@ -66,12 +66,14 @@ public:
             // To put vertex in MST
             inMST[value] = true;
 
-            //  To traverse all adjacent of u
-            for (auto x : adj[value]) {
+            // TO get all the adjacent vertices of the vertex
+            list< pair<int, int> >::iterator i;
+            for (i = adj[value].begin(); i != adj[value].end(); ++i)
+            {
 
                 // To get vertext of current adjacent
-                int k = x.first;
-                int weight = x.second;
+                int k = (*i).first;
+                int weight = (*i).second;
 
                 // When k is not in MST and weight of (u,v) is smaller than key of K
                 if (inMST[k] == false && key[k] > weight) {
@@ -114,6 +116,5 @@ int main() {
 
     g.primMST();
 
-    return 0;
     cin.get();
 }
