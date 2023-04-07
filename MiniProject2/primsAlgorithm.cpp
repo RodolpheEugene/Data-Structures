@@ -1,101 +1,123 @@
 #include <iostream>
-#include <list>
-#include <queue>
 #include <vector>
-#define INF 10000
-
-
+#include <queue>
+#include <utility>
+#include<bits/stdc++.h>
 using namespace std;
-typedef pair<int, int> intPair;
 
+// define large constant representing infinity
+# define INF 10000
 
-class Graph {
-    // number of vertices
-    int Vertex;
-    // Adjacency list representation Pair of a neighbor vertex and a weight for
-    // every edge
-    list<intPair>* adj;
+// define pair of integers to represent edges of the graph
+typedef pair<int, int>integerPair;
+
+// Class representing the graph
+class Graph
+{
+	int Vertices; // number of vertices in graph
+	list< pair<int, int> >* adjList; // Adjacency list for each seperate vertex
 
 public:
-    // Allocates memory for adjacency list
-    Graph(int V) {
-        this->Vertex = V + 1;
-        adj = new list<intPair>[V + 1];
-    }
+	Graph(int V); // constructor for graph
 
-    // Function to add an edge to graph
-    void addEdge(int u, int v, int w) {
-        adj[u].push_back(make_pair(v, w));
-        adj[v].push_back(make_pair(u, w));
-    }
+	void addEdge(int u, int v, int w); // To add edges to the graph
 
-    // Print MST using Prim's algorithm
-    void primMST() {
-
-        // prirority queue to store vertices
-        priority_queue<intPair, vector<intPair>, greater<intPair>> pq;
-
-        int source = 0; // vertex start with 0 for the source
-
-        // Vector for keys and initialize it
-        vector<int> key(Vertex, INF);
-
-        // For storing parent array which stores MST
-        vector<int> parent(Vertex, -1);
-
-        // Keeping track of vertices
-        vector<bool> inMST(Vertex, false);
-
-        // To put the source in the priority queue
-        pq.push(make_pair(0, source));
-        key[source] = 0;
-
-        // To loop priority queue until it becomes empty
-        while (!pq.empty()) {
-
-            // For storing vertext in second of par
-            int value = pq.top().second;
-            pq.pop();
-
-            // For handling different key values for same vertices
-            if (inMST[value] == true) { // process the least key values first
-                continue;                      // ignore the rest of the values
-            }
-
-
-            // To put vertex in MST
-            inMST[value] = true;
-
-            // TO get all the adjacent vertices of the vertex
-            list< pair<int, int> >::iterator i;
-            for (i = adj[value].begin(); i != adj[value].end(); ++i)
-            {
-
-                // To get vertext of current adjacent
-                int k = (*i).first;
-                int weight = (*i).second;
-
-                // When k is not in MST and weight of (u,v) is smaller than key of K
-                if (inMST[k] == false && key[k] > weight) {
-
-                    // To update key
-                    key[value] = weight;
-                    pq.push(make_pair(key[k], k));
-                    parent[k] = value;
-                }
-            }
-        }
-        // To print the edges of MST
-        for (int i = 1; i < Vertex; ++i) {
-            cout << parent[i] << " - " << i << endl;
-        }
-    }
+	void primMST(); // To find the minimum spanning tree
 };
+
+Graph::Graph(int Vertices) {
+	this->Vertices = Vertices;
+	adjList = new list<integerPair>[Vertices];
+}
+
+void Graph::addEdge(int u, int v, int w) {
+
+	// Add edges between u and v with weight w
+	adjList[u].push_back(make_pair(v, w));
+	adjList[v].push_back(make_pair(u, w));
+}
+
+void Graph::primMST() {
+
+	// Create a priority queue for string vertices and their respective key values
+	priority_queue<integerPair, vector <integerPair>, greater<integerPair> > pq;
+
+	int vertexSource = 0; // Starts from vertex 0
+
+	// Creating vectors for storing key values, parent vertices, and checks if vertex is in MST
+	vector<int> keyValue(Vertices, INF);
+	vector<int> parent(Vertices, -1);
+	vector<int> child(Vertices, -1);
+	vector<bool> inMST(Vertices, false);
+
+	// Adding the source vertex to the priority queue and sets its value 0
+	pq.push(make_pair(0, vertexSource));
+	keyValue[vertexSource] = 0;
+
+    cout << "All edges in MST: " << endl; 
+
+    // Loop until the priority queue is empty
+    while (!pq.empty())
+    {
+        // Extract the vertex with the minimum key value from the priority queue
+        int u = pq.top().second;
+        pq.pop();
+
+        // If the vertex is already in the MST, skip it
+        if (inMST[u] == true) {
+            continue;
+        }
+
+        // Mark the vertex as in the MST
+        inMST[u] = true;
+
+        // Iterate over all the adjacent vertices of the current vertex
+        list< pair<int, int> >::iterator i;
+        for (i = adjList[u].begin(); i != adjList[u].end(); ++i)
+        {
+            int v = (*i).first;
+            int weight = (*i).second;
+
+            // If the adjacent vertex is not in the MST and its key value is greater than the weight of the edge between u and v
+            if (!inMST[v] && inMST[u]) {
+                cout << u << " - " << v << endl;
+                pq.push(make_pair(keyValue[v], v));
+            }
+
+            if (!inMST[v] && keyValue[v] > weight) {
+                // Update the weight of the edge to the new value.
+                keyValue[v] = weight;
+
+                // Assign the parent vertex of the current vertex.
+                parent[v] = u;
+
+                // Assign the child vertex for referencing
+                child[v] = v;
+            }
+
+
+        }
+    }
+
+    // To print total weight of the tree
+    int totalWeight = 0;
+    cout << "Shortest Path of the MST: " << endl;
+
+    for (int i = 1; i < parent.size(); ++i) {
+        cout << parent[i] << " - " << child[i] << endl;
+        totalWeight += keyValue[i];
+    }
+
+    cout << "Total Weight of MST: " << totalWeight;
+}
+
+
+
 
 int main() {
 
     // Tests the program
-    int V = 8;
+    int V = 9;
     Graph g(V);
 
     g.addEdge(0, 1, 5);
