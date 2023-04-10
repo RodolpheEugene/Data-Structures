@@ -80,7 +80,7 @@ void Graph::primMST() {
 
             // If the adjacent vertex is not in the MST and its key value is greater than the weight of the edge between u and v
             if (!inMST[v] && inMST[u]) {
-                cout << u << " - " << v << endl;
+                cout << u << " - " << v << " -> W:" << weight << endl;
                 pq.push(make_pair(keyValue[v], v));
             }
 
@@ -103,8 +103,9 @@ void Graph::primMST() {
     int totalWeight = 0;
     cout << "Shortest path of the MST: " << endl;
 
+
     for (int i = 1; i < parent.size(); ++i) {
-        cout << parent[i] << " - " << child[i] <<  endl;
+        cout << parent[i] << " - " << child[i] << " -> W: " << keyValue[i] <<  endl;
         totalWeight += keyValue[i];
     }
  
