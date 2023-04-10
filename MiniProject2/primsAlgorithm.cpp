@@ -101,17 +101,16 @@ void Graph::primMST() {
 
     // To print total weight of the tree
     int totalWeight = 0;
-    cout << "Shortest Path of the MST: " << endl;
+    cout << "Shortest path of the MST: " << endl;
 
     for (int i = 1; i < parent.size(); ++i) {
-        cout << parent[i] << " - " << child[i] << endl;
+        cout << parent[i] << " - " << child[i] <<  endl;
         totalWeight += keyValue[i];
     }
+ 
 
     cout << "Total Weight of MST: " << totalWeight;
 }
-
-
 
 
 int main() {
